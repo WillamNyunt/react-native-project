@@ -36,14 +36,12 @@ const TrendingItem = ({ activeItem, item }: { activeItem: any, item: any }) => {
   useEffect(() => {
     fetchVimeoUrl(item.video)
       .then((videoUrl) => {
-        console.log('Fetched Video URL:', videoUrl);
         setVideoUrl(videoUrl);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
   }, [])
-
 
   return (
     <Animatable.View className='mr-5' animation={activeItem === item.$id ? zoomIn : zoomOut} duration={500}>
@@ -61,7 +59,7 @@ const TrendingItem = ({ activeItem, item }: { activeItem: any, item: any }) => {
           shouldPlay={true}
           isLooping={false}
           useNativeControls={true}
-          onPlaybackStatusUpdate={status => setStatus(() => status)}
+          onPlaybackStatusUpdate={status => {if(status.didJustFinish) setIsPlaying(false)}}
         />
       ) : (
         <TouchableOpacity activeOpacity={0.7} onPress={() => setIsPlaying(true)} className='relative justify-center items-center'>
