@@ -63,7 +63,7 @@ export async function getCurrentUser() {
         if (!currAccount) {
             throw new Error('User not found');
         }
-        const currUser = await databases.getDocument(config.databaseId, config.userCollectionId, [Query.equal('accountId', currAccount.$id)]);
+        const currUser = await databases.listDocuments(config.databaseId, config.userCollectionId, [Query.equal('accountId', currAccount.$id)]);
         if (!currUser) {
             throw new Error('User not found');
         }
