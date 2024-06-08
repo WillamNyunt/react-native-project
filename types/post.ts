@@ -1,7 +1,7 @@
 import type { User } from './user'
 export type Video = {
-    title: String,
-    thumbnail: String,
-    video: String,
+    title: string,
+    thumbnail: string,
+    video: string,
     creator: User
 }
