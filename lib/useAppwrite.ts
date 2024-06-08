@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import { Video } from '@/types'
 
 const useAppwrite = ({fn} : {fn : any}) : {data : Video[], isLoading: boolean, refetch: () => void}  => {
-    const [data, setData] = React.useState<string[]>([])
+    const [data, setData] = React.useState<Video[]>([])
     const [isLoading, setIsLoading] = React.useState(true)
 
     const fetchData = async () => {
