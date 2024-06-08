@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const VideoCard = () => {
+const VideoCard = ({post} : {post : {title: string}}) => {
   return (
     <View>
-      <Text>VideoCard</Text>
+      <Text>{post.title}</Text>
     </View>
   )
 }
