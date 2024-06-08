@@ -7,21 +7,20 @@ import { images } from '@/constants'
 import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
-import { getAllPosts } from '@/lib/appwrite'
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
 import VideoCard from '@/components/VideoCard'
 import useAppwrite from '@/lib/useAppwrite'
 
 const Home = () => {
   const { data: posts , isLoading, refetch } = useAppwrite({ fn: getAllPosts })
+  const { data: latestPosts, isLoading: latestPostsLoading, refetch: refetchLatestPosts } = useAppwrite({ fn: getLatestPosts })
   const [refreshing, setRefreshing] = React.useState(false)
-
 
   const onRefresh = async () => {
     setRefreshing(true)
     await refetch();
     setRefreshing(false)
   }
-
 
   return (
     <SafeAreaView className='bg-primary h-full'>
@@ -44,9 +43,9 @@ const Home = () => {
             </View>
             <SearchInput placeholder='Search for a video topic' />
             <View className='w-full flex-1 pt-5 pb-8'>
-              <Text className='text-gray-100 text-lg font-pregular mb-3'>Latest Videos</Text>
+              <Text className='text-lg font-pregular text-gray-100 mb-3'>Latest Videos</Text>
+              <Trending posts={latestPosts ?? []} />
             </View>
-            <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
           </View>
         )}
         ListEmptyComponent={() => (
