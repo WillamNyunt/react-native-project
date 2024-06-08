@@ -1,7 +1,8 @@
 import { View, Text, Alert } from 'react-native'
 import React, {useEffect} from 'react'
+import { Video } from '@/types'
 
-const useAppwrite = ({fn} : {fn : any}) : {data : string[], isLoading: boolean, refetch: () => void}  => {
+const useAppwrite = ({fn} : {fn : any}) : {data : Video[], isLoading: boolean, refetch: () => void}  => {
     const [data, setData] = React.useState<string[]>([])
     const [isLoading, setIsLoading] = React.useState(true)
 
