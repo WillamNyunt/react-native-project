@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -6,8 +6,8 @@ import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import { useState } from 'react'
 import CustomButton from '@/components/CustomButton'
-import { Link } from 'expo-router'
-
+import { Link, router } from 'expo-router'
+import { createUser } from '@/lib/appwrite';
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -17,11 +17,22 @@ const SignUp = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
+  const submit = async () => {
+    if(!form.username || !form.email || !form.password) {
+      Alert.alert('Error', 'Please fill all fields');
+    }
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
-    }, 2000)
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      if (!result) {
+        throw new Error('Account not created');
+      }
+      router.push('/home')
+     } catch (error : any) {
+       Alert.alert('Error', error.message);
+     } finally {
+       setIsSubmitting(false)
+     }
   }
 
   return (
@@ -33,7 +44,7 @@ const SignUp = () => {
           <FormField title="Username" placeholder='Username' value={form.username} handleChangeText={(e: string) => setForm({ ...form, username: e })} otherStyles='mt-10' />
           <FormField title="Email" placeholder='Email' value={form.email} handleChangeText={(e: string) => setForm({ ...form, email: e })} otherStyles='mt-7' keyboardType="email-address" />
           <FormField title="Password" placeholder='Password' value={form.password} handleChangeText={(e: string) => setForm({ ...form, password: e })} otherStyles='mt-4' secureTextEntry />
-          <CustomButton title="Sign In" handlePress={submit} containerStyles="mt-7" isLoading={isSubmitting} />
+          <CustomButton title="Sign Up" handlePress={submit} containerStyles="mt-7" isLoading={isSubmitting} />
           <View className='justify-center pt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pre'>
               Have an account already?
