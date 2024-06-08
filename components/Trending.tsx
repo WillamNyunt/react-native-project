@@ -1,9 +1,10 @@
 import { View, Text, FlatList, Image, TouchableOpacity, ImageBackground } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect, useMemo } from 'react'
 import { Video as VideoType } from '@/types'
 import { ResizeMode, Video, Audio } from "expo-av";
 import * as Animatable from 'react-native-animatable'
 import { icons } from '@/constants';
+import { fetchVimeoUrl } from '@/lib/vimeo';
 
 
 const zoomIn = {
@@ -27,22 +28,21 @@ const zoomOut = {
 
 
 const TrendingItem = ({ activeItem, item }: { activeItem: any, item: any }) => {
-  const [status, setStatus] = React.useState({});
-  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [status, setStatus] = useState({});
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<Video>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
-
-  const consoleVideoFormat = (video: VideoType) => {
-    console.log(`Video ID: ${video.title}`);
-    console.log(`Video Title: ${video.video}`);
-  };
-
-  if (isPlaying) {
-    videoRef.current?.playAsync();
-  } else {
-    videoRef.current?.stopAsync();
-  }
-
+  useEffect(() => {
+    fetchVimeoUrl(item.video)
+      .then((videoUrl) => {
+        console.log('Fetched Video URL:', videoUrl);
+        setVideoUrl(videoUrl);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, [])
 
 
   return (
@@ -50,7 +50,7 @@ const TrendingItem = ({ activeItem, item }: { activeItem: any, item: any }) => {
       {isPlaying ? (
         <Video
           source={{
-            uri: item.video,
+            uri: videoUrl ? videoUrl : '',
           }}
           ref={videoRef}
           className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
@@ -60,6 +60,7 @@ const TrendingItem = ({ activeItem, item }: { activeItem: any, item: any }) => {
           isMuted={false}
           shouldPlay={true}
           isLooping={false}
+          useNativeControls={true}
           onPlaybackStatusUpdate={status => setStatus(() => status)}
         />
       ) : (
