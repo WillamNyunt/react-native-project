@@ -11,6 +11,7 @@ const Trending = ({posts} : {posts : any[]}) => {
             renderItem={({ item }) => (
                 <Text className='text-3xl text-white'>{item.id}</Text>
             )}
+            horizontal
         />
     </View>
   )
