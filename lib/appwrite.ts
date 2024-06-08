@@ -1,7 +1,5 @@
 import { Client, Account, ID, Avatars, Databases } from 'react-native-appwrite';
 
-
-
 export const config = {
     endpoint: 'https://cloud.appwrite.io/v1',
     platform: 'com.brightnode.aora',

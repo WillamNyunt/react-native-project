@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -6,7 +6,8 @@ import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import { useState } from 'react'
 import CustomButton from '@/components/CustomButton'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
+import { signIn } from '@/lib/appwrite'
 
 
 const SignIn = () => {
@@ -16,11 +17,22 @@ const SignIn = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
-    setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
-    }, 2000)
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      throw new Error('Please fill all fields');
+    }
+    setIsSubmitting(true);
+    try {
+      const response = await signIn(form.email, form.password);
+      if (!response) {
+        throw new Error('Cannot sign in');
+      }
+      router.push('/home');
+    } catch (error : any) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
