@@ -5,6 +5,7 @@ type CustomButtonProps = {
     title: string,
     handlePress: () => void,
     containerStyles?: string,
+    isLoading?: boolean,
 }
 
 
