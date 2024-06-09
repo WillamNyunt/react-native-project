@@ -11,11 +11,13 @@ import { signIn } from '@/lib/appwrite'
 
 
 const SignIn = () => {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const [form, setForm] = useState({
     email: '',
     password: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
 
   const submit = async () => {
     if (!form.email || !form.password) {
@@ -27,6 +29,8 @@ const SignIn = () => {
       if (!response) {
         throw new Error('Cannot sign in');
       }
+      setUser(response);
+      setIsLoggedIn(true);
       router.push('/home');
     } catch (error : any) {
       Alert.alert('Error', error.message);
