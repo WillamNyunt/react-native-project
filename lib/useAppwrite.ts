@@ -2,14 +2,14 @@ import { View, Text, Alert } from 'react-native'
 import React, {useEffect} from 'react'
 import { Video } from '@/types'
 
-const useAppwrite = ({fn} : {fn : any}) : {data : Video[], isLoading: boolean, refetch: () => void}  => {
+const useAppwrite = (fn : () => Promise<any>) : {data : Video[], isLoading: boolean, refetch: () => void}  => {
     const [data, setData] = React.useState<Video[]>([])
     const [isLoading, setIsLoading] = React.useState(true)
 
     const fetchData = async () => {
         setIsLoading(true)
         try {
-            const response = await fn() as string;
+            const response = await fn();
             if (response) {
                 setData(response)
             } else {

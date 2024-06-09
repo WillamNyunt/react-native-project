@@ -12,8 +12,8 @@ import VideoCard from '@/components/VideoCard'
 import useAppwrite from '@/lib/useAppwrite'
 
 const Home = () => {
-  const { data: posts , isLoading, refetch } = useAppwrite({ fn: getAllPosts })
-  const { data: latestPosts, isLoading: latestPostsLoading, refetch: refetchLatestPosts } = useAppwrite({ fn: getLatestPosts })
+  const { data: posts , isLoading, refetch } = useAppwrite(getAllPosts)
+  const { data: latestPosts, isLoading: latestPostsLoading, refetch: refetchLatestPosts } = useAppwrite(getLatestPosts)
   const [refreshing, setRefreshing] = React.useState(false)
 
   const onRefresh = async () => {
