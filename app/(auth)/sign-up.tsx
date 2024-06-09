@@ -8,6 +8,7 @@ import { useState } from 'react'
 import CustomButton from '@/components/CustomButton'
 import { Link, router } from 'expo-router'
 import { createUser } from '@/lib/appwrite';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ const SignUp = () => {
     email: '',
     password: ''
   })
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const submit = async () => {
@@ -27,6 +29,8 @@ const SignUp = () => {
       if (!result) {
         throw new Error('Account not created');
       }
+      setUser(response);
+      setIsLoggedIn(true);
       router.push('/home')
      } catch (error : any) {
        Alert.alert('Error', error.message);
