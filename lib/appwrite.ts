@@ -125,9 +125,9 @@ export const searchPosts = async (query: string) => {
 
 export const getUserPosts = async (userId: string) => {
     try {
-        const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.search('creator', userId)]);
+        const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.equal('creator', userId)]);
         if (!posts) {
-            throw new Error('Posts not found');
+            throw new Error('Posts not found')
         }
         return posts.documents;
     } catch (error) {
