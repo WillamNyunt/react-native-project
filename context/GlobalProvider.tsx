@@ -28,7 +28,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }): ReactElem
         getCurrentUser().then((res: any) => {
             if (res) {
                 setIsLoggedIn(true)
-                console.log(res)
                 setUser(res)
             } else {
                 setIsLoggedIn(false)
