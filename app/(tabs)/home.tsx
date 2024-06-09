@@ -1,8 +1,6 @@
-import { View, Text, FlatList, Image, RefreshControl, Alert } from 'react-native'
-import React, { useEffect } from 'react'
-import { Tabs, Redirect } from 'expo-router'
+import { View, Text, FlatList, Image, RefreshControl} from 'react-native'
+import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 import { images } from '@/constants'
 import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
