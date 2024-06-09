@@ -13,21 +13,22 @@ type GlobalContextType = {
 const GlobalContext = createContext<GlobalContextType>({
     isLoggedIn: false,
     setIsLoggedIn: () => {},
-    user: null,
+    user: '',
     setUser : () => {},
     isLoading: true
 });
+
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }): ReactElement => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
-
     useEffect(() => {
         getCurrentUser().then((res: any) => {
             if (res) {
                 setIsLoggedIn(true)
+                console.log(res)
                 setUser(res)
             } else {
                 setIsLoggedIn(false)
