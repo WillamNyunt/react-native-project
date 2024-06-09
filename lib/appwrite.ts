@@ -34,7 +34,7 @@ const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
-export async function createUser(email : string, password : string, username : string){
+export async function createUser(email: string, password: string, username: string) {
     try {
         const newAccount = await account.create(ID.unique(), email, password, username);
 
@@ -43,7 +43,7 @@ export async function createUser(email : string, password : string, username : s
         }
 
         const avatarUrl = avatars.getInitials(username);
-        
+
         await signIn(email, password);
 
         const newUser = await databases.createDocument(databaseId, userCollectionId, ID.unique(), {
@@ -59,7 +59,7 @@ export async function createUser(email : string, password : string, username : s
     }
 }
 
-export async function signIn(email : string, password : string) {
+export async function signIn(email: string, password: string) {
     try {
         const session = await account.createEmailPasswordSession(email, password);
         return session;
@@ -78,7 +78,9 @@ export async function getCurrentUser() {
         if (!currUser) {
             throw new Error('User not found');
         }
-        return currUser;
+        if (!currUser) throw Error;
+
+        return currUser.documents[0];
     } catch (error) {
         throw new Error(error as string);
     }
@@ -89,47 +91,55 @@ export const getAllPosts = async () => {
         const posts = await databases.listDocuments(databaseId, videoCollectionId);
         if (!posts) {
             throw new Error('Posts not found');
-        } 
+        }
         return posts.documents;
-    } catch(error) {
+    } catch (error) {
         throw new Error(error as string);
     }
 }
 
-export const getLatestPosts = async () => { 
+export const getLatestPosts = async () => {
     try {
         const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.orderDesc('$createdAt'), Query.limit(7)]);
         if (!posts) {
             throw new Error('Posts not found');
-        } 
+        }
         return posts.documents;
-    } catch(error) {
+    } catch (error) {
         throw new Error(error as string);
     }
 }
 
-export const searchPosts = async (query : string) => { 
+export const searchPosts = async (query: string) => {
     try {
         const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.search('title', query)]);
         if (!posts) {
             throw new Error('Posts not found');
-        } 
+        }
         return posts.documents;
-    } catch(error) {
+    } catch (error) {
         console.log('error')
         throw new Error(error as string);
     }
 }
 
-export const getUserPosts = async (userId: string) => { 
+export const getUserPosts = async (userId: string) => {
     try {
         const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.search('creator', userId)]);
         if (!posts) {
             throw new Error('Posts not found');
-        } 
+        }
         return posts.documents;
-    } catch(error) {
+    } catch (error) {
         console.log('error')
+        throw new Error(error as string);
+    }
+}
+
+export const signOut = async () => {
+    try {
+        await account.deleteSession('current');
+    } catch (error) {
         throw new Error(error as string);
     }
 }
