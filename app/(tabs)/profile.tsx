@@ -1,26 +1,31 @@
 import { View, FlatList, Image } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
-import EmptyState from '@/components/EmptyState'
-import VideoCard from '@/components/VideoCard'
 import useAppwrite from '@/lib/useAppwrite'
-import { getUserposts } from '@/lib/appwrite'
-import { useGlobalContext } from "../../context/GlobalProvider";
-import InfoBox from '@/components/InfoBox'
+import { getUserPosts, signOut } from '@/lib/appwrite'
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { TouchableOpacity } from 'react-native'
+import { icons } from '@/constants'
+import { EmptyState, InfoBox, VideoCard } from '@/components'
+import { router } from 'expo-router'
 
 const Profile = () => {
-  const { user, setUser, setIsLogged } = useGlobalContext();
+  const { user, setUser, setIsLoggedIn, isLoggedIn } = useGlobalContext();  
   const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
 
   const logout = async () => {
     await signOut();
     setUser(null);
-    setIsLogged(false);
-
+    setIsLoggedIn(false);
     router.replace("/sign-in");
   };
 
+  const userData = {
+    username: user?.username,
+    avatar: user?.avatar,
+    postsCount: posts.length || 0,
+    followersCount: 1200 // Replace with actual followers count
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -28,12 +33,7 @@ const Profile = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
+          <VideoCard post={item}
           />
         )}
         ListEmptyComponent={() => (
@@ -54,7 +54,6 @@ const Profile = () => {
                 className="w-6 h-6"
               />
             </TouchableOpacity>
-
             <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
               <Image
                 source={{ uri: user?.avatar }}
@@ -62,13 +61,11 @@ const Profile = () => {
                 resizeMode="cover"
               />
             </View>
-
             <InfoBox
               title={user?.username}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
-
             <View className="mt-5 flex flex-row">
               <InfoBox
                 title={posts.length || 0}
