@@ -31,7 +31,7 @@ client
     .setEndpoint(config.endpoint) // Your Appwrite Endpoint
     .setProject(config.projectId) // Your project ID
     .setPlatform(config.platform) // Your application ID or bundle ID.
-    
+
 
 const account = new Account(client);
 const avatars = new Avatars(client);
@@ -151,35 +151,35 @@ export const signOut = async () => {
 export const getFilePreview = async (fileId, type) => {
     let fileUrl;
     try {
-        if(type === 'video') {
+        if (type === 'video') {
             fileUrl = storage.getFileView(storageId, fileId);
-        } else if (type ==='image') {
-            fileUrl =   storage.getFilePreview(storageId, fileId, 2000, 2000, 'top', 100);
+        } else if (type === 'image') {
+            fileUrl = storage.getFilePreview(storageId, fileId, 2000, 2000, 'top', 100);
         } else {
             throw new Error('Invalid file type')
-        } 
+        }
 
-        if(!fileUrl) throw new Error('File URL not found');
+        if (!fileUrl) throw new Error('File URL not found');
         return fileUrl;
-    } catch (error : any) {
+    } catch (error: any) {
         throw new Error(error);
     }
 }
 
 
-export const uploadFile = async (file, type : string) => {
+export const uploadFile = async (file, type: string) => {
     if (!file) throw new Error('File not found')
     const { mimeType, ...rest } = file;
 
-    const asset = { 
+    const asset = {
         name: file.fileName,
         type: file.mimeType,
         size: file.fileSize,
         uri: file.uri,
     }
-    
+
     try {
-        const uploadedFile = await storage.createFile(storageId, ID.unique(), asset); 
+        const uploadedFile = await storage.createFile(storageId, ID.unique(), asset);
         if (!uploadedFile) throw new Error('File not uploaded');
         const fileUrl = await getFilePreview(uploadedFile.$id, type);
         return fileUrl;
@@ -188,7 +188,7 @@ export const uploadFile = async (file, type : string) => {
     }
 }
 
-export const createVideo = async (form : CreateForm) => {
+export const createVideo = async (form: CreateForm) => {
     try {
         const [thumbnailUrl, videoUrl] = await Promise.all([
             uploadFile(form.thumbnail, 'image'),
@@ -212,10 +212,22 @@ export const createVideo = async (form : CreateForm) => {
     }
 }
 
-export const addBookMarkedVideos = async (videos: { videos: Video[] }): Promise<void> => {
+export const getBookmarkedVideos = async (videos: { videos: Video[] }): Promise<Video[]> => {
     try {
         const user = await getCurrentUser();
-        console.log(user)
+        const bookmarks = user['bookmarked-videos'];
+        let bookMarkedVideos;
+        try {
+            bookMarkedVideos = await Promise.all(bookmarks.map(async (bookmark : string) => {
+                const video = await databases.getDocument(databaseId, videoCollectionId, bookmark);
+                return video;
+            }
+            ));
+            console.log(bookMarkedVideos);
+            return bookMarkedVideos;
+        } catch (error) {
+            throw new Error('Error fetching bookmarked videos');
+        }  
     } catch (error) {
         throw new Error(error as string);
     }
