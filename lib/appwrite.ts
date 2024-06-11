@@ -1,5 +1,8 @@
+import { CreateForm } from '@/types';
 import { Client, Account, ID, Avatars, Databases, Query, Storage } from 'react-native-appwrite';
+import { Video } from '@/types';
 
+// to do : toss this in a secret env file
 export const config = {
     endpoint: 'https://cloud.appwrite.io/v1',
     platform: 'com.brightnode.aora',
@@ -89,7 +92,7 @@ export async function getCurrentUser() {
 
 export const getAllPosts = async () => {
     try {
-        const posts = await databases.listDocuments(databaseId, videoCollectionId);
+        const posts = await databases.listDocuments(databaseId, videoCollectionId, [Query.orderDesc('$createdAt')]);
         if (!posts) {
             throw new Error('Posts not found');
         }
@@ -149,7 +152,7 @@ export const getFilePreview = async (fileId, type) => {
     let fileUrl;
     try {
         if(type === 'video') {
-            fileUrl = storage.getFilePreview(storageId, fileId);
+            fileUrl = storage.getFileView(storageId, fileId);
         } else if (type ==='image') {
             fileUrl =   storage.getFilePreview(storageId, fileId, 2000, 2000, 'top', 100);
         } else {
@@ -164,13 +167,20 @@ export const getFilePreview = async (fileId, type) => {
 }
 
 
-export const uploadFile = async (file, type) => {
+export const uploadFile = async (file, type : string) => {
     if (!file) throw new Error('File not found')
     const { mimeType, ...rest } = file;
-    const asset = { type: mimeType, ...rest };
 
+    const asset = { 
+        name: file.fileName,
+        type: file.mimeType,
+        size: file.fileSize,
+        uri: file.uri,
+    }
+    
     try {
         const uploadedFile = await storage.createFile(storageId, ID.unique(), asset); 
+        if (!uploadedFile) throw new Error('File not uploaded');
         const fileUrl = await getFilePreview(uploadedFile.$id, type);
         return fileUrl;
     } catch (error) {
@@ -178,11 +188,11 @@ export const uploadFile = async (file, type) => {
     }
 }
 
-export const createVideo = async (form) => {
+export const createVideo = async (form : CreateForm) => {
     try {
         const [thumbnailUrl, videoUrl] = await Promise.all([
-            uploadFile(form.thumbnail.uri, 'image'),
-            uploadFile(form.video.uri, 'video'),
+            uploadFile(form.thumbnail, 'image'),
+            uploadFile(form.video, 'video'),
         ]);
         const newPost = await databases.createDocument(
             databaseId,
@@ -197,6 +207,15 @@ export const createVideo = async (form) => {
             }
         )
         return newPost;
+    } catch (error) {
+        throw new Error(error as string);
+    }
+}
+
+export const addBookMarkedVideos = async (videos: { videos: Video[] }): Promise<void> => {
+    try {
+        const user = await getCurrentUser();
+        console.log(user)
     } catch (error) {
         throw new Error(error as string);
     }
