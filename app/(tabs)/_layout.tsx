@@ -1,7 +1,9 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
-import { Tabs, Redirect } from 'expo-router'
+import React, { useRef , useCallback } from 'react'
+import { Tabs } from 'expo-router'
 import { ImageSourcePropType } from 'react-native'
+import BottomSheet from '@gorhom/bottom-sheet';
+
 
 type TabsLayoutProps = {
     children?: React.ReactNode,
@@ -22,12 +24,19 @@ const TabIcon = ({ icon, color, name, focused }: TabsLayoutProps) => {
                 tintColor={color}
                 className="w-6 h-6"
             />
-            <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-sm`} style={{color: color}}>{name}</Text>
+            <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-sm`} style={{ color: color }}>{name}</Text>
         </View>
     )
 }
 
 const TabsLayout = () => {
+    const bottomSheetRef = useRef<BottomSheet>(null);
+
+    // callbacks
+    const handleSheetChanges = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
     return (
         <>
             <Tabs screenOptions={{

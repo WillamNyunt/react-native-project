@@ -4,9 +4,13 @@ import { Video, ResizeMode } from 'expo-av'
 import { Video as VideoType } from '@/types'
 import { fetchVimeoUrl } from '@/lib/vimeo'
 import { icons } from '@/constants'
+import { useGlobalContext } from '@/context/GlobalProvider'
+
+
 const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avatar } } }: { post: VideoType }) => {
     const [play, setPlay] = useState(false)
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
+    const { user } = useGlobalContext()
 
     useEffect(() => {
         fetchVimeoUrl(video)
@@ -17,6 +21,11 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
                 console.error('Error:', error)
             })
     }, [])
+
+    const openSlideMenu = () => {
+        console.log('Open slide menu')
+        console.log('use' , user)
+    }
 
     return (
         <View className='flex-col items-center px-4 mb-14'>
@@ -31,7 +40,9 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
                     </View>
                 </View>
                 <View className='pt-2'>
-                    <Image source={icons.menu} className='w-5 h-5' resizeMode='contain' />
+                    <TouchableOpacity onPress={() => setIsVisible(true)}>
+                        <Image source={icons.menu} className='w-5 h-5' resizeMode='contain' />
+                    </TouchableOpacity>
                 </View>
             </View>
             {play ? (
@@ -50,7 +61,7 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
                     onPlaybackStatusUpdate={status => { if (status.didJustFinish) setPlay(false) }}
                 />
             ) : <TouchableOpacity activeOpacity={0.7} onPress={() => setPlay(true)} className='w-full h-60 rounded-xl mt-3 relative justify-center items-center'>
-                <Image source={{ uri: thumbnail }} className='w-full h-full rounded-xl mt-3' resizeMode='cover' />
+                <Image source={{ uri: thumbnail }} className='w-full h-full rounded-xl mt-3' resizeMode='contain' />
                 <Image source={icons.play} className='w-12 h-12 absolute' resizeMode='contain' />
             </TouchableOpacity>}
         </View>

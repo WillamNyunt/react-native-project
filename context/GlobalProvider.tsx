@@ -40,7 +40,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }): ReactElem
         })
     }, [])
 
-
     return (
         <GlobalContext.Provider value={{
             isLoggedIn,

@@ -6,10 +6,16 @@ const extractVimeoId = (url: string) => {
 };
 
 // Function to fetch video URL from Vimeo configuration
+
+/** This function accepts a Vimeo URL and returns either video URL or input URL if it is not a vimeo URL.
+ * 
+ * @param url 
+ * @returns  video URL
+ */
+
 export const fetchVimeoUrl = async (url: string) => {
 
   if (url.includes('vimeo')) {
-    console.log('Fetching Vimeo video URL:', url);
     const videoId = extractVimeoId(url);
     if (!videoId) {
       throw new Error('Invalid Vimeo URL');

@@ -2,6 +2,13 @@ import { View, Text, Alert } from 'react-native'
 import React, {useEffect} from 'react'
 import { Video } from '@/types'
 
+/** Custom hooks 
+ *  
+ * @param fn 
+ * @returns custom hook Video[], isLoading, refetch
+ */
+
+
 const useAppwrite = (fn : () => Promise<any>) : {data : Video[], isLoading: boolean, refetch: () => void}  => {
     const [data, setData] = React.useState<Video[]>([])
     const [isLoading, setIsLoading] = React.useState(true)

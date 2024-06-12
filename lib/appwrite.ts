@@ -223,7 +223,6 @@ export const getBookmarkedVideos = async (videos: { videos: Video[] }): Promise<
                 return video;
             }
             ));
-            console.log(bookMarkedVideos);
             return bookMarkedVideos;
         } catch (error) {
             throw new Error('Error fetching bookmarked videos');

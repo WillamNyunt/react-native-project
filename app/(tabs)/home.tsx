@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, RefreshControl} from 'react-native'
+import { View, Text, FlatList, Image, RefreshControl, StyleSheet } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '@/constants'
@@ -8,12 +8,12 @@ import EmptyState from '@/components/EmptyState'
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
 import VideoCard from '@/components/VideoCard'
 import useAppwrite from '@/lib/useAppwrite'
+import CustomBottomSheet from '@/components/CustomBottomSheet'
 
 const Home = () => {
-  const { data: posts , isLoading, refetch } = useAppwrite(getAllPosts)
+  const { data: posts, isLoading, refetch } = useAppwrite(getAllPosts)
   const { data: latestPosts, isLoading: latestPostsLoading, refetch: refetchLatestPosts } = useAppwrite(getLatestPosts)
   const [refreshing, setRefreshing] = React.useState(false)
-
   const onRefresh = async () => {
     setRefreshing(true)
     await refetch();
@@ -51,8 +51,16 @@ const Home = () => {
         )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
+      <CustomBottomSheet />
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'rgb(22, 22, 34)',
+  },
+});
 
 export default Home
