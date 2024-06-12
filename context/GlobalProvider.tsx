@@ -24,6 +24,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }): ReactElem
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    
     useEffect(() => {
         getCurrentUser().then((res: any) => {
             if (res) {

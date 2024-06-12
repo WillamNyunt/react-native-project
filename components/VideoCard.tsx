@@ -5,12 +5,14 @@ import { Video as VideoType } from '@/types'
 import { fetchVimeoUrl } from '@/lib/vimeo'
 import { icons } from '@/constants'
 import { useGlobalContext } from '@/context/GlobalProvider'
+import { useBottomSheetContext } from '@/context/BottomSheetProvider'
 
 
 const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avatar } } }: { post: VideoType }) => {
     const [play, setPlay] = useState(false)
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
     const { user } = useGlobalContext()
+    const { bottomSheetRef, open } = useBottomSheetContext()
 
     useEffect(() => {
         fetchVimeoUrl(video)
@@ -27,6 +29,11 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
         console.log('use' , user)
     }
 
+
+    const openBottomSheet = () => {
+        open()
+    }
+
     return (
         <View className='flex-col items-center px-4 mb-14'>
             <View className='flex-row gap-3 items-start'>
@@ -40,7 +47,7 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
                     </View>
                 </View>
                 <View className='pt-2'>
-                    <TouchableOpacity onPress={() => setIsVisible(true)}>
+                    <TouchableOpacity onPress={openBottomSheet}>
                         <Image source={icons.menu} className='w-5 h-5' resizeMode='contain' />
                     </TouchableOpacity>
                 </View>

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { useFonts } from 'expo-font'
 import { GlobalProvider } from '@/context/GlobalProvider'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { BottomSheetProvider } from '@/context/BottomSheetProvider'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -28,16 +29,18 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) return null
 
   return (
-    <GestureHandlerRootView>
-      <GlobalProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
-        </Stack>
-      </GlobalProvider>
-    </GestureHandlerRootView>
+    <BottomSheetProvider>
+      <GestureHandlerRootView>
+        <GlobalProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+          </Stack>
+        </GlobalProvider>
+      </GestureHandlerRootView>
+    </BottomSheetProvider>
   )
 }
 

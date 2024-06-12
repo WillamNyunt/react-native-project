@@ -2,8 +2,7 @@ import { View, Text, Image } from 'react-native'
 import React, { useRef , useCallback } from 'react'
 import { Tabs } from 'expo-router'
 import { ImageSourcePropType } from 'react-native'
-import BottomSheet from '@gorhom/bottom-sheet';
-
+import CustomBottomSheet from '@/components/CustomBottomSheet';
 
 type TabsLayoutProps = {
     children?: React.ReactNode,
@@ -87,6 +86,7 @@ const TabsLayout = () => {
                     }}
                 />
             </Tabs>
+            <CustomBottomSheet />
         </>
     )
 }

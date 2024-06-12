@@ -8,8 +8,6 @@ type CustomButtonProps = {
     isLoading?: boolean,
 }
 
-
-
 const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoading} : CustomButtonProps) => {
   return (
     <View>
