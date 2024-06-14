@@ -21,7 +21,7 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className='bg-primary h-full'>
+    <SafeAreaView className='bg-primary h-full' edges={['right', 'left', 'top']}>
       <FlatList
         data={posts}
         className='h-full'
