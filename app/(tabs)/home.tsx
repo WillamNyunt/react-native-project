@@ -22,9 +22,9 @@ const Home = () => {
 
   return (
     <SafeAreaView className='bg-primary h-full'>
-      <TouchableOpacity><Text>Open</Text></TouchableOpacity>
       <FlatList
         data={posts}
+        className='h-full'
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard post={item} />

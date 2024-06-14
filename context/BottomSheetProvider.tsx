@@ -8,6 +8,8 @@ type BottomSheetContextType = {
     snapTo: (index: number) => void;
     expand: () => void;
     collapse: () => void;
+    bookMarkData: {};
+    setBookMarkData: Dispatch<React.SetStateAction<{}>>;    
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType>({
@@ -18,18 +20,22 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
     snapTo: (index: number) => {},
     expand: () => {},
     collapse: () => {},
+    bookMarkData: {},
+    setBookMarkData: () => {}
 });
 
 export const useBottomSheetContext = () => useContext(BottomSheetContext);
 
 export const BottomSheetProvider = ({ children }: { children: ReactNode }): ReactElement => {
     const [bottomSheetRef, setBottomSheetRef] = useState<any>(null);
+    const [bookMarkData, setBookMarkData ] = useState<any>(null);
     
-    console.log(bottomSheetRef)
     return (
         <BottomSheetContext.Provider value={{
             bottomSheetRef,
             setBottomSheetRef,
+            bookMarkData,
+            setBookMarkData,
             open: () => bottomSheetRef?.expand(),
             close: () => bottomSheetRef?.close(),
             snapTo: (index: number) => bottomSheetRef?.snapTo(index),

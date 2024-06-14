@@ -8,13 +8,13 @@ import { useGlobalContext } from '@/context/GlobalProvider'
 import { useBottomSheetContext } from '@/context/BottomSheetProvider'
 
 
-const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avatar } } }: { post: VideoType }) => {
+const VideoCard = ({ post: { $id, title, thumbnail, video, creator: { username, avatar } } }: { post: VideoType }) => {
     const [play, setPlay] = useState(false)
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
     const { user } = useGlobalContext()
-    const { bottomSheetRef, open } = useBottomSheetContext()
+    const { bottomSheetRef, open, setBookMarkData } = useBottomSheetContext()
 
-    useEffect(() => {
+    useEffect(() => { 
         fetchVimeoUrl(video)
             .then((videoUrl) => {
                 setVideoUrl(videoUrl)
@@ -24,14 +24,10 @@ const VideoCard = ({ post: { title, thumbnail, video, creator: { username, avata
             })
     }, [])
 
-    const openSlideMenu = () => {
-        console.log('Open slide menu')
-        console.log('use' , user)
-    }
-
 
     const openBottomSheet = () => {
         open()
+        setBookMarkData({ type: 'bookmark', videoId: $id, userId: user?.id })
     }
 
     return (
