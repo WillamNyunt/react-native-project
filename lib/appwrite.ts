@@ -219,7 +219,7 @@ export const getBookmarkedVideos = async (videos: { videos: Video[] }): Promise<
         let bookMarkedVideos;
         try {
             bookMarkedVideos = await Promise.all(bookmarks.map(async (bookmark : string) => {
-                const video = await databases.getDocument(databaseId, videoCollectionId, bookmark);
+                const video = await databases.getDocument(databaseId, videoCollectionId, bookmark.$id);
                 return video;
             }
             ));
@@ -227,6 +227,34 @@ export const getBookmarkedVideos = async (videos: { videos: Video[] }): Promise<
         } catch (error) {
             throw new Error('Error fetching bookmarked videos');
         }  
+    } catch (error) {
+        throw new Error(error as string);
+    }
+}
+
+export const addVideoBookMark = async (videoId: string) => {
+    try {
+        const user = await getCurrentUser();
+        const bookmarks = user['bookmarked-videos'];
+        const newBookmarks = [...bookmarks, videoId];
+        const updatedUser = await databases.updateDocument(databaseId, userCollectionId, user.$id, {
+            'bookmarked-videos': newBookmarks,
+        });
+        return updatedUser;
+    } catch (error) {
+        throw new Error(error as string);
+    }
+}
+
+export const removeVideoBookMark = async (videoId: string) => { 
+    try {
+        const user = await getCurrentUser();
+        const bookmarks = user['bookmarked-videos'];
+        const newBookmarks = bookmarks.filter((bookmark: string) => bookmark !== videoId);
+        const updatedUser = await databases.updateDocument(databaseId, userCollectionId, user.$id, {
+            'bookmarked-videos': newBookmarks,
+        });
+        return updatedUser;
     } catch (error) {
         throw new Error(error as string);
     }
