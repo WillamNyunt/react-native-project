@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect, ReactElement, ReactNode, Dispatch} from 'react'
 
+type Data = {
+    type: string;
+    videoId: string;
+}
+
+
 type BottomSheetContextType = {
     bottomSheetRef: React.RefObject<any> | null;
     setBottomSheetRef: Dispatch<React.SetStateAction<Ref>>;
@@ -8,8 +14,8 @@ type BottomSheetContextType = {
     snapTo: (index: number) => void;
     expand: () => void;
     collapse: () => void;
-    bookMarkData: {};
-    setBookMarkData: Dispatch<React.SetStateAction<{}>>;    
+    setData: Dispatch<React.SetStateAction<Data>>;
+    data: Data;
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType>({
@@ -20,27 +26,50 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
     snapTo: (index: number) => {},
     expand: () => {},
     collapse: () => {},
-    bookMarkData: {},
-    setBookMarkData: () => {}
+    data: {
+        type: '',
+        videoId: '',
+    },
+    setData: () => {},
 });
 
 export const useBottomSheetContext = () => useContext(BottomSheetContext);
 
+
+/** This context all the bottom sheet related functions and states. 
+ *
+ * @function setBottomSheetRef - Sets the bottom sheet ref required on bottomsheet component mount.
+ * @function open - Opens the bottom sheet.
+ * @function close - Closes the bottom sheet. 
+ * @function snapTo - Snaps the bottom sheet to the given index.
+ * @function expand - Expands the bottom sheet.
+ * @param children
+ * @returns 
+ */
+
 export const BottomSheetProvider = ({ children }: { children: ReactNode }): ReactElement => {
     const [bottomSheetRef, setBottomSheetRef] = useState<any>(null);
-    const [bookMarkData, setBookMarkData ] = useState<any>(null);
-    
+    const [data, setData] = useState({ 
+        type: '',
+        videoId: '',
+    });
+
+    console.log(data)
+
     return (
         <BottomSheetContext.Provider value={{
             bottomSheetRef,
             setBottomSheetRef,
-            bookMarkData,
-            setBookMarkData,
             open: () => bottomSheetRef?.expand(),
             close: () => bottomSheetRef?.close(),
             snapTo: (index: number) => bottomSheetRef?.snapTo(index),
             expand: () => bottomSheetRef?.expand(),
             collapse: () => bottomSheetRef?.collapse(),
+            data: {
+                type: data.type,
+                videoId: data.videoId,
+            },
+            setData,
         }}>
             {children}
         </BottomSheetContext.Provider>

@@ -10,7 +10,7 @@ import VideoCardBottomSheet from './VideoCardBottomSheet'
 
 const CustomBottomSheet = () => {
   const snapPoints = useMemo(() => ['25%', '30%', '40%'], []);
-  const { setBottomSheetRef, bookMarkData } = useBottomSheetContext();
+  const { setBottomSheetRef, data } = useBottomSheetContext();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   //* Stores the bottom sheet ref inside the context
@@ -38,7 +38,7 @@ const CustomBottomSheet = () => {
       enablePanDownToClose
     >
       <View className='h-full bg-primary p-4'>
-        { bookMarkData?.type === 'bookmark' && <VideoCardBottomSheet videoId={bookMarkData?.videoId} />}
+        {data.type === 'bookmark' && <VideoCardBottomSheet videoId={data.videoId} />}
       </View>
     </BottomSheet>
   );

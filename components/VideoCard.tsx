@@ -4,15 +4,12 @@ import { Video, ResizeMode } from 'expo-av'
 import { Video as VideoType } from '@/types'
 import { fetchVimeoUrl } from '@/lib/vimeo'
 import { icons } from '@/constants'
-import { useGlobalContext } from '@/context/GlobalProvider'
 import { useBottomSheetContext } from '@/context/BottomSheetProvider'
-
 
 const VideoCard = ({ post: { $id, title, thumbnail, video, creator: { username, avatar } } }: { post: VideoType }) => {
     const [play, setPlay] = useState(false)
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
-    const { user } = useGlobalContext()
-    const { open, setBookMarkData } = useBottomSheetContext()
+    const { open, setData } = useBottomSheetContext()
 
     useEffect(() => { 
         fetchVimeoUrl(video)
@@ -24,10 +21,9 @@ const VideoCard = ({ post: { $id, title, thumbnail, video, creator: { username, 
             })
     }, [])
 
-
     const openBottomSheet = () => {
         open()
-        setBookMarkData({ type: 'bookmark', videoId: $id, userId: user?.id })
+        setData(prevData => ({ ...prevData, type:'bookmark', videoId: $id }))
     }
 
     return (

@@ -212,7 +212,7 @@ export const createVideo = async (form: CreateForm) => {
     }
 }
 
-export const getBookmarkedVideos = async (videos: { videos: Video[] }): Promise<Video[]> => {
+export const getBookmarkedVideos = async (): Promise<Video[]> => {
     try {
         const user = await getCurrentUser();
         const bookmarks = user['bookmarked-videos'];
@@ -250,9 +250,10 @@ export const removeVideoBookMark = async (videoId: string) => {
     try {
         const user = await getCurrentUser();
         const bookmarks = user['bookmarked-videos'];
-        const newBookmarks = bookmarks.filter((bookmark: string) => bookmark !== videoId);
+        const newBookmarks = bookmarks.filter((bookmark: string) => bookmark.$id !== videoId);
+        const newBookmarkIds = newBookmarks.map((bookmark: string) => bookmark.$id);
         const updatedUser = await databases.updateDocument(databaseId, userCollectionId, user.$id, {
-            'bookmarked-videos': newBookmarks,
+            'bookmarked-videos': newBookmarkIds,
         });
         return updatedUser;
     } catch (error) {
