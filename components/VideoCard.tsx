@@ -12,7 +12,7 @@ const VideoCard = ({ post: { $id, title, thumbnail, video, creator: { username, 
     const [play, setPlay] = useState(false)
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
     const { user } = useGlobalContext()
-    const { bottomSheetRef, open, setBookMarkData } = useBottomSheetContext()
+    const { open, setBookMarkData } = useBottomSheetContext()
 
     useEffect(() => { 
         fetchVimeoUrl(video)
@@ -64,7 +64,7 @@ const VideoCard = ({ post: { $id, title, thumbnail, video, creator: { username, 
                     onPlaybackStatusUpdate={status => { if (status.didJustFinish) setPlay(false) }}
                 />
             ) : <TouchableOpacity activeOpacity={0.7} onPress={() => setPlay(true)} className='w-full h-60 rounded-xl mt-3 relative justify-center items-center'>
-                <Image source={{ uri: thumbnail }} className='w-full h-full rounded-xl mt-3' resizeMode='contain' />
+                <Image source={{ uri: thumbnail }} className='w-full h-full rounded-xl mt-3' resizeMode='cover' />
                 <Image source={icons.play} className='w-12 h-12 absolute' resizeMode='contain' />
             </TouchableOpacity>}
         </View>
