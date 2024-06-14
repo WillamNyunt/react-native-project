@@ -36,7 +36,6 @@ export const fetchVimeoUrl = async (url: string) => {
       throw error;
     }
   } else {
-    console.log(url)
     return url;
   }
 };
